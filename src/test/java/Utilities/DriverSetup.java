@@ -4,13 +4,14 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.testng.annotations.AfterSuite;
 import org.testng.annotations.BeforeSuite;
 
 import java.time.Duration;
 
 public class DriverSetup {
 
-    private static String browserName = System.getProperty("browser", "chrome");
+    private static String browserName = System.getProperty("browser", "edge");
     private static final ThreadLocal<WebDriver> LOCAL_Driver = new ThreadLocal<>();
 
     public static void setDriver(WebDriver driver) {
@@ -40,14 +41,16 @@ public class DriverSetup {
 
     public static synchronized void setBrowser () {
         WebDriver driver = getBrowser(browserName);
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(30));
+        driver.manage().deleteAllCookies();
+        driver.navigate().refresh();
+
         setDriver(driver);
-
-
     }
-
-    public static synchronized void quitBrowser(){
+@AfterSuite
+    public static synchronized void quitBrowser() throws InterruptedException {
+        Thread.sleep(5000);
         getDriver().quit();
     }
 
