@@ -2,6 +2,7 @@ package Utilities;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.testng.annotations.AfterSuite;
@@ -11,7 +12,7 @@ import java.time.Duration;
 
 public class DriverSetup {
 
-    private static String browserName = System.getProperty("browser", "edge");
+    private static String browserName = System.getProperty("browser", "chrome");
     private static final ThreadLocal<WebDriver> LOCAL_Driver = new ThreadLocal<>();
 
     public static void setDriver(WebDriver driver) {
@@ -26,7 +27,10 @@ public class DriverSetup {
     public static WebDriver getBrowser(String browserName) {
         switch (browserName.toLowerCase()) {
             case "chrome":
-                return new ChromeDriver();
+                ChromeOptions chromeOptions = new ChromeOptions();
+                chromeOptions.setBinary("\"C:\\chrome-win64\\chrome.exe\"");
+                chromeOptions.addArguments("user-data-dir=C:\\Users\\User\\AppData\\Local\\Google\\Chrome for Testing\\User Data");
+                return new ChromeDriver(chromeOptions);
             case "firefox":
                 return new FirefoxDriver();
             case "edge":
